@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IMAD 5112 Practicum (Music Playlist App) - ST10090645</string>
+    <string name="student_details">Dylan Mbamba - ST10090645</string>
+    <string name="app_logo_description">Music Playlist App Logo</string>
+    <string name="start_button_text">Start</string>
+    <string name="exit_button_text">Exit</string>
+
+    <string-array name="rating">
+        <item>Give a Rating</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+</resources>
