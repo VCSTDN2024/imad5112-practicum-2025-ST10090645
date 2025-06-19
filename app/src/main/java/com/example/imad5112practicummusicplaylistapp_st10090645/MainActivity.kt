@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etSongTitle : EditText
     private lateinit var etArtistName : EditText
     private lateinit var etComments : EditText
-    private lateinit var spnRatings : Spinner
+    private lateinit var etRatings : EditText
     private lateinit var btAdd : Button
     private lateinit var btExit : Button
     private lateinit var btStore : Button
@@ -36,28 +36,18 @@ class MainActivity : AppCompatActivity() {
         etSongTitle = findViewById(R.id.etTitle)
         etArtistName = findViewById(R.id.etArtist)
         etComments = findViewById(R.id.etComment)
-        spnRatings = findViewById(R.id.spnRating)
+        etRatings = findViewById(R.id.etRating)
         btAdd = findViewById(R.id.btnAddToPlaylist)
         btExit = findViewById(R.id.btnExit)
         btStore = findViewById(R.id.btnInput)
         btViewList = findViewById(R.id.btnList)
-
-        //Enabling spinners using data from strings.xml
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.rating,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spnRatings.adapter = adapter
-        }
 
         //Disabling functionality until user clicks the "Add to Playlist" button and is
         //prompted to input data
         etSongTitle.isEnabled = false
         etArtistName.isEnabled = false
         etComments.isEnabled = false
-        spnRatings.isEnabled = false
+        etRatings.isEnabled = false
         btStore.isEnabled = false
 
         btStore.setOnClickListener {
@@ -66,7 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         btViewList.setOnClickListener {
             val intent = Intent(this, ViewDetails::class.java)
-            intent.putExtra("Processing", Processing)
             startActivity(intent)
         }
 
@@ -74,8 +63,9 @@ class MainActivity : AppCompatActivity() {
             etSongTitle.isEnabled = true
             etArtistName.isEnabled = true
             etComments.isEnabled = true
-            spnRatings.isEnabled = true
+            etRatings.isEnabled = true
             btStore.isEnabled = true
+            Toast.makeText(this, "Please enter song info.", Toast.LENGTH_SHORT).show()
             refreshStoreButton()
         }
 
@@ -87,10 +77,10 @@ class MainActivity : AppCompatActivity() {
     private fun store() {
         val title = etSongTitle.text.toString().trim()
         val name = etArtistName.text.toString().trim()
-        val ratingStr = spnRatings.selectedItem.toString()
-        val comment = etComments.text.toString()
+        val ratingStr = etRatings.text.toString().trim()
+        val comment = etComments.text.toString().trim()
 
-        if (title.isEmpty() || name.isEmpty() || comment.isEmpty()) {
+        if (title.isEmpty() || name.isEmpty() || comment.isEmpty() || ratingStr.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -104,11 +94,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         } catch (e: NumberFormatException) {
-            Toast.makeText(this, "Please select a rating.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please enter a rating.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val added = Processing.storeInfoInList(title, name, rating, comment)
+        val added = Processing.store(title, name, rating, comment)
 
         if (added) {
             Toast.makeText(this, "Song added. Total entries: ${Processing.totalCount}", Toast.LENGTH_SHORT).show()
@@ -124,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         etSongTitle.isEnabled = false
         etArtistName.isEnabled = false
         etComments.isEnabled = false
-        spnRatings.isEnabled = false
+        etRatings.isEnabled = false
         btStore.isEnabled = false
     }
 
@@ -140,8 +130,8 @@ class MainActivity : AppCompatActivity() {
     private fun clear() {
         etSongTitle.setText("")
         etArtistName.setText("")
-        spnRatings.setSelection(0)
-        etComments.setSelection(0)
+        etRatings.setText("")
+        etComments.setText("")
     }
 
     override fun onResume() {

@@ -23,7 +23,8 @@ class Processing() : Parcelable {
         totalCount = parcel.readInt()
     }
 
-    fun storeInfoInList(title: String, name: String, rating: Int, comment: String): Boolean {
+
+    fun store(title: String, name: String, rating: Int, comment: String): Boolean {
         if (totalCount < maxNumbers) {
             songs[totalCount] = title
             artists[totalCount] = name
@@ -35,36 +36,55 @@ class Processing() : Parcelable {
         return false
     }
 
-    fun createdFormattedList(): List<String> {
+    fun generateFormattedEntries(): List<String> {
         val formattedList = mutableListOf<String>()
-
         if (totalCount == 0) {
-            formattedList.add("Need to add some songs first!")
+            formattedList.add("Need to add some games first!")
             return formattedList
         }
 
         for (i in 0 until totalCount) {
-            val songName = songs[i]?.toString() ?: "N/A"
-            val artistName = artists[i]?.toString() ?: "N/A"
-            val rating = rat[i]?.toString() ?: "N/A"
-            val addComments = additComments[i]?.toString() ?: "N/A"
+
+            val songtitle = songs[i]?: "N/A"
+            val artist = artists[i]?: "N/A"
+            val ratings = rat[i]?.toString() ?: "N/A"
+            val comments = additComments[i]?: "N/A"
+
 
             formattedList.add(
-                "Title of Song: $songName\n" +
-                        "Artist Name: $artistName\n" +
-                        "Rating: $rating\n" +
-                        "Comment: $addComments\n" +
+                "Title of Song: $songtitle\n" +
+                        "Artist Name: $artist\n" +
+                        "Rating: $ratings\n" +
+                        "Comment: $comments\n" +
                         "-----------------------------------"
             )
         }
         return formattedList
     }
 
+    fun calculateAverageRating(): Double {
+        if (totalCount == 0) return 0.0
+        var totalMinutes = 0
+        var actualEntries = 0
+        for (i in 0 until totalCount) {
+            rat[i]?.let {
+                totalMinutes += it
+                actualEntries++
+            }
+        }
+
+        return if (actualEntries > 0) totalMinutes.toDouble() / actualEntries else 0.0
+    }
+
+
+
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeStringArray(songs)
         parcel.writeStringArray(artists)
         parcel.writeArray(rat as Array<out Any?>)
         parcel.writeStringArray(additComments)
+        parcel.writeInt(totalCount)
     }
 
     override fun describeContents(): Int {
@@ -75,10 +95,12 @@ class Processing() : Parcelable {
         override fun createFromParcel(parcel: Parcel): Processing {
             return Processing(parcel)
         }
+
+        override fun newArray(size: Int): Array<Processing?> {
+            return arrayOfNulls(size)
+        }
     }
 
-    override fun newArray(size: Int): Array<Processing?> {
-        return arrayOfNulls(size)
-    }
+
 }
 
