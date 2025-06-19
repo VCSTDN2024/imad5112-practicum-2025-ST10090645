@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 class Processing() : Parcelable {
 
+    //Paralled 1D arrays for storing data of the songs
     private val maxNumbers = 4
     private val songs: Array<String?> = arrayOfNulls(maxNumbers)
     private val artists: Array<String?> = arrayOfNulls(maxNumbers)
@@ -13,6 +14,7 @@ class Processing() : Parcelable {
 
     var totalCount: Int = 0
 
+    //Building the parcable to pass the data through activities
     constructor(parcel: Parcel) : this() {
         parcel.readStringArray(songs)
         parcel.readStringArray(artists)
@@ -23,7 +25,7 @@ class Processing() : Parcelable {
         totalCount = parcel.readInt()
     }
 
-
+    //Adds a new song to array if array is not filled.
     fun store(title: String, name: String, rating: Int, comment: String): Boolean {
         if (totalCount < maxNumbers) {
             songs[totalCount] = title
@@ -36,10 +38,11 @@ class Processing() : Parcelable {
         return false
     }
 
+    //Function to create the actual playlist on second screen, utilizes a for... loop
     fun generateFormattedEntries(): List<String> {
         val formattedList = mutableListOf<String>()
         if (totalCount == 0) {
-            formattedList.add("Need to add some games first!")
+            formattedList.add("Need to add some songs first!")
             return formattedList
         }
 
@@ -62,6 +65,7 @@ class Processing() : Parcelable {
         return formattedList
     }
 
+    //Function to calculate the average rating of songs, also utilizes a for... loop
     fun calculateAverageRating(): Double {
         if (totalCount == 0) return 0.0
         var totalMinutes = 0
@@ -78,7 +82,7 @@ class Processing() : Parcelable {
 
 
 
-
+    //Necessary to for the parcelable to run as intended
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeStringArray(songs)
         parcel.writeStringArray(artists)

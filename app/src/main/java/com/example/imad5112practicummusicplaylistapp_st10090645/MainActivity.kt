@@ -1,3 +1,5 @@
+/* Reference List: https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sourcedoc=%7BA1FF62F0-8E1A-47BC-99BD-CA07AE24427D%7D&file=IMAD5112_MM.docx&action=default&mobileredirect=true
+                    https://mystudies.iie.edu.za/d2l/le/lessons/19195/topics/2482397*/
 package com.example.imad5112practicummusicplaylistapp_st10090645
 
 import android.content.Intent
@@ -50,15 +52,18 @@ class MainActivity : AppCompatActivity() {
         etRatings.isEnabled = false
         btStore.isEnabled = false
 
+        //Enabling Button that allows user to store data into playlist
         btStore.setOnClickListener {
             store()
         }
 
+        //Enabling button that allows user to move to 2nd screen to view playlist
         btViewList.setOnClickListener {
             val intent = Intent(this, ViewDetails::class.java)
             startActivity(intent)
         }
 
+        //Enabling button that allows user to start adding songs to playlist
         btAdd.setOnClickListener {
             etSongTitle.isEnabled = true
             etArtistName.isEnabled = true
@@ -69,17 +74,21 @@ class MainActivity : AppCompatActivity() {
             refreshStoreButton()
         }
 
+        // Enabling button that allows users to exit the app
         btExit.setOnClickListener {
             finishAffinity()
             exitProcess(0)
         }
     }
+
+    //Function that allows users to store data into the parallel arrays
     private fun store() {
         val title = etSongTitle.text.toString().trim()
         val name = etArtistName.text.toString().trim()
         val ratingStr = etRatings.text.toString().trim()
         val comment = etComments.text.toString().trim()
 
+        //Various forms of error handling
         if (title.isEmpty() || name.isEmpty() || comment.isEmpty() || ratingStr.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields!", Toast.LENGTH_SHORT).show()
             return
@@ -110,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Ensuring users aren't able to add songs to playlist unless the choose to do so
     private fun refreshButtonStates() {
         etSongTitle.isEnabled = false
         etArtistName.isEnabled = false
@@ -127,6 +137,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Function to clear all input fields after a song has been successfully stored
     private fun clear() {
         etSongTitle.setText("")
         etArtistName.setText("")
@@ -134,6 +145,7 @@ class MainActivity : AppCompatActivity() {
         etComments.setText("")
     }
 
+    //Same as above, ensuring users aren't able to add songs to playlist unless the choose to do so
     override fun onResume() {
         super.onResume()
         refreshButtonStates()

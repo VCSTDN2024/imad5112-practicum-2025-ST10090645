@@ -34,8 +34,10 @@ class ViewDetails : AppCompatActivity() {
         tvAverage = findViewById(R.id.tvAvg)
         btExitAppl = findViewById(R.id.btnDetaExit)
 
+        //Receiving data from the processing class file
         val Processing = MainActivity.Processing
 
+        //List is hidden until input is received from user, also ensure the list was sent safely
         btShowList.setOnClickListener {
             if (Processing != null) {
                 val formattedEntries = Processing.generateFormattedEntries()
@@ -51,16 +53,11 @@ class ViewDetails : AppCompatActivity() {
             }
         }
 
+        //Allows user to go back to first screen
         btBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-            finish()
-        }
-        btBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             startActivity(intent)
             finish()
         }
@@ -70,6 +67,7 @@ class ViewDetails : AppCompatActivity() {
             exitProcess(0)
         }
 
+        //Allows user to calculate the average
         btCalcAvg.setOnClickListener {
             if (Processing != null) {
                 val avgRat = String.format("%.2f", Processing.calculateAverageRating())
